@@ -1,23 +1,28 @@
 #!/usr/bin/python3
+#### Ismail Abdullahi
+#### create-users.py
+#### Program Creation Date: 11/14/2024
+#### Program Last Updated Date: 11/20/2024
 
-#what are these imports being used for?
-import os
-import re
-import sys
+import os  # Used to execute system-level commands for creating users and groups.
+import re  # Used for regular expressions to process and validate input data.
+import sys  # Used to handle standard input (stdin) for processing input data dynamically.
 
 def main():
-    for line in sys.stdin:
+    for line in sys.stdin:  # Reads each line from standard input (stdin).
 
-        #this "regular expression" is searching for the presence of a character - what is it and why?
-        match = re.match("^#",line)
+        # This "regular expression" checks if the line starts with '#' (indicating a comment).
+        # If a match is found, it means the line is a comment and should be skipped.
+        match = re.match("^#", line)
         print("The contents of the match were: ", match)
 
-        #what is this field doing?
+        # This splits the input line into a list of fields using the ':' delimiter.
+        # It ensures the line data can be processed into individual parts (username, password, etc.).
         fields = line.strip().split(':')
 
-        #what would an appropriate comment be for describing what this IF statement is checking for?
-        #what happens if the IF statement evaluates to true?
-        #how does this IF statement rely on what happened in the prior two lines of code? The match and fields lines.
+        # This IF statement checks if the line is a comment (match is not None) or
+        # if the line does not contain exactly 5 fields. If either condition is true, the line is skipped.
+        # It relies on the match result to skip comments and the fields split to validate input structure.
         if match or len(fields) != 5:
             continue
 
@@ -34,13 +39,14 @@ def main():
         print cmd
         os.system(cmd)
 
-        for group in groups:
-            #what is this if statement looking for?
+        for group in groups:  # Loops through the list of groups the user should be added to.
+            # This IF statement checks if the group is not '-', indicating valid group data.
             if group != '-':
-                print("==> Assigning %s to the %s group..." % (username,group))
-                cmd = "/usr/sbin/adduser %s %s" % (username,group)
-                #print cmd
-                #os.system(cmd)
+                print("==> Assigning %s to the %s group..." % (username, group))
+                cmd = "/usr/sbin/adduser %s %s" % (username, group)
+                print(cmd)  # Prints the command for debugging purposes.
+                os.system(cmd)  # Executes the command to add the user to the group.
+
 
 if __name__ == '__main__':
     main()
